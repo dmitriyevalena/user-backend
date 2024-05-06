@@ -1,16 +1,23 @@
 package com.clearsolutions.userbackend.service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.clearsolutions.userbackend.api.model.CreateUserDto;
+import com.clearsolutions.userbackend.exception.IllegalDateException;
+import com.clearsolutions.userbackend.exception.UserAlreadyExistsException;
 import com.clearsolutions.userbackend.model.LocalUser;
 import com.clearsolutions.userbackend.model.dao.LocalUserDAO;
-import com.clearsolutions.userbackend.exception.FromDateIsNotBeforeToDate;
 
 @Service
 public class UserService {
+	
+    @Value("${user.age}")
+    private String userAge;
 
 	private LocalUserDAO localUserDAO;
 
@@ -18,13 +25,26 @@ public class UserService {
 		this.localUserDAO = localUserDAO;
 	}
 
-	public List<LocalUser> getUsers(String fromDateStr, String toDateStr) throws FromDateIsNotBeforeToDate {
-		LocalDate fromDate = LocalDate.parse(fromDateStr);
-		LocalDate toDate = LocalDate.parse(toDateStr);
-		if (!fromDate.isBefore(toDate)) {
-			throw new FromDateIsNotBeforeToDate();
+	public LocalUser createUser(CreateUserDto createUserBody) throws UserAlreadyExistsException, IllegalDateException{
+        if(localUserDAO.findByEmailIgnoreCase(createUserBody.getEmail()).isPresent()){
+            throw new UserAlreadyExistsException();
+        }
+		LocalDate curDate = LocalDate.now();  
+		if(Period.between(createUserBody.getBirthDate(), curDate).getYears()<18) {
+			throw new IllegalDateException();
 		}
-		return localUserDAO.findByBirthDateBetween(fromDate, toDate);
+        return localUserDAO.save(createUserBody.toLocalUser());
+	}
+	
+    public List<LocalUser> getUsers(){
+        return localUserDAO.findAll();
+    }
+	
+	public List<LocalUser> getUsers(LocalDate fromDate, LocalDate toDate) throws IllegalDateException{
+			if (!fromDate.isBefore(toDate)) {
+				throw new IllegalDateException();
+			}
+			return localUserDAO.findByBirthDateBetween(fromDate, toDate);		
 	}
 
 }
