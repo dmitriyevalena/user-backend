@@ -39,6 +39,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+.project
+.classpath
 
 # External tool builders
 .externalToolBuilders/
@@ -94,3 +96,6 @@ local.properties
 .sts4-cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse
+/target/
+
+HELP.md
