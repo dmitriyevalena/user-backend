@@ -24,22 +24,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
 		Map<String, List<String>> body = new HashMap<>();
-
 		List<String> errors = ex.getBindingResult().getAllErrors().stream()
 				.map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
-
 		body.put("errors", errors);
-
 		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(UserAlreadyExistsException.class)
-	public ResponseEntity<?> userAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request) {
+	public ResponseEntity<?> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
 		Map<String, String> body = new HashMap<>();
-
 		body.put("error", ex.getMessage());
-
 		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<?> handleUserNotFound(UserNotFoundException ex, WebRequest request) {
+		Map<String, String> body = new HashMap<>();
+		body.put("error", ex.getMessage());
+		return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+	}
 }

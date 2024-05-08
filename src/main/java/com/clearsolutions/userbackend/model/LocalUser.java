@@ -1,10 +1,13 @@
 package com.clearsolutions.userbackend.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
@@ -29,8 +32,9 @@ public class LocalUser {
 	@Column(name = "birth_date", nullable = false)
 	private LocalDate birthDate;
 
-	@Column(name = "address", nullable = true)
-	private String address;
+	@OneToOne(cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "address_id", referencedColumnName = "id", nullable = true)
+	private Address address;
 
 	@Column(name = "phone_number", nullable = true)
 	private String phoneNumber;
@@ -74,12 +78,12 @@ public class LocalUser {
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
-
-	public String getAddress() {
+	
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 
