@@ -2,9 +2,13 @@ package com.clearsolutions.userbackend.api.model;
 
 import java.time.LocalDate;
 
+import com.clearsolutions.userbackend.constraints.BirthDate;
 import com.clearsolutions.userbackend.model.LocalUser;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 
 /**
  * The information required to create a user.
@@ -17,16 +21,17 @@ public class CreateUserDto {
     private String email;
     
     /** The first name. */
-    @NotBlank(message = "First is required.")
+    @NotBlank(message = "First name is required.")
     private String firstName;
     
     /** The last name. */
-    @NotBlank(message = "Last is required.")
+    @NotBlank(message = "Last name is required.")
     private String lastName;
     
     /** The birth date. */
     @NotNull(message = "The date of birth is required.")
     @Past(message = "The date of birth must be in the past.")
+    @BirthDate(message = "The user's age is younger than that allowed for user registration.")
     private LocalDate birthDate;
       
     /** The address. */
