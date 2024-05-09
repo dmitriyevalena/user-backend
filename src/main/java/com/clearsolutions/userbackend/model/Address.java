@@ -1,5 +1,7 @@
 package com.clearsolutions.userbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,28 +10,37 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Address of user.
+ */
 @Entity
 @Table(name = "addresses")
 public class Address {
 
+	/** Unique id for the address. */
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	/** The country of the address. */
 	@Column(nullable = false)
 	private String country;
 
+	/** The city of the address. */
 	@Column(nullable = false)
 	private String city;
 
+	/** The zip code of the address. */
 	@Column(nullable = false)
 	private String zipCode;
 
+	/** The street of the address. */
 	@Column(nullable = false)
 	private String street;
 
+	@JsonIgnore
 	@OneToOne(mappedBy = "address")
-	private LocalUser user;
+	private User user;
 
 	public int getId() {
 		return id;
@@ -71,13 +82,12 @@ public class Address {
 		this.street = street;
 	}
 
-	public LocalUser getUser() {
+	public User getUser() {
 		return user;
 	}
 
-	public void setUser(LocalUser user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
+
 }

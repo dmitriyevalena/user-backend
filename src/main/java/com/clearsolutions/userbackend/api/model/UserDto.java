@@ -3,7 +3,7 @@ package com.clearsolutions.userbackend.api.model;
 import java.time.LocalDate;
 
 import com.clearsolutions.userbackend.constraints.BirthDate;
-import com.clearsolutions.userbackend.model.LocalUser;
+import com.clearsolutions.userbackend.model.User;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Past;
 /**
  * The information required to create a user.
  */
-public class CreateUserDto {
+public class UserDto {
 
 	/** The email. */
 	@NotBlank(message = "Email is required.")
@@ -90,8 +90,8 @@ public class CreateUserDto {
 		this.birthDate = birthDate;
 	}
 
-	public LocalUser toLocalUser() {
-		LocalUser user = new LocalUser();
+	public User toUser() {
+		User user = new User();
 		user.setEmail(email);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
