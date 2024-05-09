@@ -19,7 +19,7 @@ public class Address {
 
 	/** Unique id for the address. */
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	/** The country of the address. */
