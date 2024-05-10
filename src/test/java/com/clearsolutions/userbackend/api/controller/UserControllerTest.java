@@ -1,6 +1,7 @@
 package com.clearsolutions.userbackend.api.controller;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -134,6 +135,7 @@ public class UserControllerTest {
 		userDto.setFirstName("ChangedUserA-FirstName");
 		userDto.setLastName("ChangedUserA-LastName");
 		userDto.setBirthDate(LocalDate.of(2005, 9, 1));
+		userDto.setPhoneNumber("001-555-5678");
 		AddressDto addressDto = new AddressDto();
 		addressDto.setCountry("Ukraine");
 		addressDto.setCity("Dnipro");
@@ -146,7 +148,17 @@ public class UserControllerTest {
 				.andExpect(status().isNotFound());
 
 		mvc.perform(put("/users/1").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(userDto)))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.email", is("ChangedUserA@junit.com")))
+				.andExpect(jsonPath("$.firstName", is("ChangedUserA-FirstName")))
+				.andExpect(jsonPath("$.lastName", is("ChangedUserA-LastName")))
+				.andExpect(jsonPath("$.birthDate", is("2005-09-01")))
+				.andExpect(jsonPath("$.phoneNumber", is("001-555-5678")))
+				.andExpect(jsonPath("$.address.country", is("Ukraine")))
+				.andExpect(jsonPath("$.address.city", is("Dnipro")))
+				.andExpect(jsonPath("$.address.zipCode", is("67890")))
+				.andExpect(jsonPath("$.address.street", is("Darvina")));
 	}
 
 	/**
@@ -159,7 +171,7 @@ public class UserControllerTest {
 	public void testPartialUpdateUser() throws Exception {
 		String patchInstructions = "[{\"op\":\"replace\",\"path\": \"/phoneNumber\",\"value\":\"001-555-5678\"}, {\"op\":\"replace\",\"path\": \"/birthDate\",\"value\":\"2005-09-01\"}]";
 		
-		// User doesnt' exist.
+		// User doesn't exist.
 		mvc.perform(patch("/users/6").contentType(APPLICATION_JSON_PATCH_JSON).content(patchInstructions))
 		.andExpect(status().isNotFound());
 		
@@ -196,6 +208,9 @@ public class UserControllerTest {
 	public void testGetUsersByBirthDateRange() throws Exception {		
 		// From “From” date is less than “To”.  
 		mvc.perform(get("/users?from=2005-01-01&to=2004-01-01")).andExpect(status().isBadRequest());
-		mvc.perform(get("/users?from=2004-01-01&to=2005-01-01")).andExpect(status().isOk());
+		mvc.perform(get("/users?from=2004-10-01&to=2005-01-01")).andExpect(status().isOk())
+		.andExpect(jsonPath("$", hasSize(2)))
+		.andExpect(jsonPath("$[0].birthDate", is("2004-10-01")))
+		.andExpect(jsonPath("$[1].birthDate", is("2004-11-01")));
 	}
 }
