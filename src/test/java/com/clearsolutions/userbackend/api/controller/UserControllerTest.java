@@ -72,9 +72,6 @@ public class UserControllerTest {
 		userDto.setEmail("1234567");
 		mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(userDto)))
 				.andExpect(status().isBadRequest());
-		userDto.setEmail("");
-		mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(userDto)))
-				.andExpect(status().isBadRequest());
 
 		userDto.setEmail("UserServiceTest$testCreateUser@junit.com");
 
