@@ -35,8 +35,8 @@ public class UserDto {
 	@BirthDate(message = "The user's age is younger than that allowed for user registration.")
 	private LocalDate birthDate;
 
-	@Valid
 	/** The address. */
+	@Valid
 	private AddressDto address;
 
 	/** The phone number. */

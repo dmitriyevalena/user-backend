@@ -6,19 +6,26 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Pattern.Flag;
 
+/**
+ * The information required to create the address
+ */
 public class AddressDto {
 
+	/** The country. */
 	@NotBlank(message = "The country is required.")
 	private String country;
 
+	/** The city. */
 	@NotBlank(message = "The city is required.")
 	private String city;
 
+	/** The zipCode. */
 	@NotBlank(message = "The Zip code is required.")
 	@Pattern(regexp = "^\\d{1,5}$", flags = { Flag.CASE_INSENSITIVE,
 			Flag.MULTILINE }, message = "The Zip code is invalid.")
 	private String zipCode;
 
+	/** The street. */
 	@NotBlank(message = "The street name is required.")
 	private String street;
 
