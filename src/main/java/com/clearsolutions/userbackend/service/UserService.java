@@ -49,8 +49,11 @@ public class UserService {
 	 * @return the persisted entity
 	 */
 	public User save(User user) {
-		Address persistedAddress = addressDAO.save(user.getAddress());
-		user.setAddress(persistedAddress);
+		Address address = user.getAddress();
+		if (address != null) {
+			Address persistedAddress = addressDAO.save(address);
+			user.setAddress(persistedAddress);
+		}
 		return localUserDAO.save(user);
 	}
 

@@ -14,28 +14,29 @@ import jakarta.persistence.Table;
  * Address of user.
  */
 @Entity
-@Table(name = "addresses")
+@Table(name = "address")
 public class Address {
 
 	/** Unique id for the address. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", nullable = false)
 	private int id;
 
 	/** The country of the address. */
-	@Column(nullable = false)
+	@Column(name = "country", nullable = false)
 	private String country;
 
 	/** The city of the address. */
-	@Column(nullable = false)
+	@Column(name = "city", nullable = false)
 	private String city;
 
 	/** The zip code of the address. */
-	@Column(nullable = false)
+	@Column(name = "zip_code", nullable = false)
 	private String zipCode;
 
 	/** The street of the address. */
-	@Column(nullable = false)
+	@Column(name = "street", nullable = false)
 	private String street;
 
 	@JsonIgnore
