@@ -10,6 +10,9 @@ public class BirthDateValidator implements ConstraintValidator<BirthDate, LocalD
 	@Override
 	public boolean isValid(final LocalDate valueToValidate, final ConstraintValidatorContext context) {
 		LocalDate curDate = LocalDate.now();
-		return Period.between(valueToValidate, curDate).getYears() >= 18;
+		if (valueToValidate != null) {
+			return Period.between(valueToValidate, curDate).getYears() >= 18;
+		} else
+			return false;
 	}
 }

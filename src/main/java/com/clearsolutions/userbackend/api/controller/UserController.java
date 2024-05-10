@@ -68,7 +68,7 @@ public class UserController {
 	public ResponseEntity<User> partialUpdateUser(@PathVariable("id") Long id, @RequestBody JsonPatch patch)
 			throws UserNotFoundException {
 		try {
-			User user = userService.findById(id);
+			User user = userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 			User userPatched = applyPatchToUser(patch, user);
 			userService.save(userPatched);
 			return ResponseEntity.ok(userPatched);

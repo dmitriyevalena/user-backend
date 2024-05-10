@@ -66,7 +66,8 @@ public class UserService {
 	 * @throws UserNotFoundException
 	 */
 	public User updateUser(Long id, User updatedUser) throws UserNotFoundException {
-		User existingUser = findById(id);
+
+		User existingUser = localUserDAO.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 		existingUser.setEmail(updatedUser.getEmail());
 		existingUser.setFirstName(updatedUser.getFirstName());
 		existingUser.setLastName(updatedUser.getLastName());
@@ -75,15 +76,20 @@ public class UserService {
 
 		Address updatedAddress = updatedUser.getAddress();
 		Address existingAddress = existingUser.getAddress();
+		if (updatedAddress != null) {
+			if (existingAddress == null) {
+				existingAddress = new Address();
+				existingUser.setAddress(existingAddress);
+			}
+			existingAddress.setCountry(updatedAddress.getCountry());
+			existingAddress.setCity(updatedAddress.getCity());
+			existingAddress.setStreet(updatedAddress.getStreet());
+			existingAddress.setZipCode(updatedAddress.getZipCode());
+		} else if (existingAddress != null) {
+			existingAddress = null;
+		}
 
-		existingAddress.setCountry(updatedAddress.getCountry());
-		existingAddress.setCity(updatedAddress.getCity());
-		existingAddress.setStreet(updatedAddress.getStreet());
-		existingAddress.setZipCode(updatedAddress.getZipCode());
-
-		Address persistedAddress = addressDAO.save(existingAddress);
-		existingUser.setAddress(persistedAddress);
-		return localUserDAO.save(existingUser);
+		return save(existingUser);
 	}
 
 	/**
@@ -92,7 +98,7 @@ public class UserService {
 	 * @param id the ID of the entity
 	 */
 	public void deleteById(Long id) throws UserNotFoundException {
-		User user = findById(id);
+		User user = localUserDAO.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 		localUserDAO.delete(user);
 	}
 
@@ -109,16 +115,10 @@ public class UserService {
 	 * Get user by ID.
 	 * 
 	 * @param id
-	 * @return entity
-	 * @throws UserNotFoundException
+	 * @return optional entity
 	 */
-	public User findById(Long id) throws UserNotFoundException {
-		Optional<User> userOp = localUserDAO.findById(id);
-		if (userOp.isPresent()) {
-			return userOp.get();
-		} else {
-			throw new UserNotFoundException("User with id: " + id + " not found.");
-		}
+	public Optional<User> findById(Long id) {
+		return localUserDAO.findById(id);
 	}
 
 	/**
