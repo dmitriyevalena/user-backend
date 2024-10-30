@@ -17,9 +17,6 @@ import com.clearsolutions.userbackend.model.dao.LocalUserDAO;
 @Service
 public class UserService {
 
-	@Value("${user.age}")
-	private String userAge;
-
 	private LocalUserDAO localUserDAO;
 
 	private AddressDAO addressDAO;
